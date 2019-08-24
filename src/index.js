@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from 'lodash' // 使用js中的lodash库
 
 function createDomElement() {
   var dom = document.createElement('div')
