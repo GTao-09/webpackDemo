@@ -19,16 +19,26 @@ module.exports = {
         test: /\.(styl|css)$/, // /\.(sc|c|sa)ss$/  // scss, css, sass
         use: [ // ["style-loader", "css-loader", "stylus-loader"]
           {
-            loader: "style-loader"
+            loader: 'style-loader'
           },
           {
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
               sourceMap: true
             }
           },
+          { // 添加前缀
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss', // 唯一标识
+              sourceMap: true,
+              plugins: loader => [
+                require('autoprefixer') // 可配置browserslist(package.json)
+              ]
+            }
+          },
           {
-            loader: "stylus-loader", // {loader: "sass-loader"} // {loader: "less-loader"}
+            loader: 'stylus-loader', // {loader: "sass-loader"} // {loader: "less-loader"}
             options: {
               sourceMap: true
             }

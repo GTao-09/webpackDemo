@@ -500,7 +500,7 @@ $ npm install precss --save-dev
 $ npm install postcss-import --save-dev
 ```
 
-```js
+```
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = {
@@ -528,7 +528,7 @@ module.exports = {
               ident: 'postcss',
               sourceMap: true,
               plugins: loader => [
-                require('autoprefixer')({ browsers: ['> 0.15% in CN'] }) // 添加前缀
+                require('autoprefixer') // 可配置browserslist
               ]
             }
           },
@@ -543,7 +543,33 @@ module.exports = {
     ]
   }
 };
+
 ```
+
+### 配置browserslist
+
+```js
+// 配置browserslist
+// 在package.json中配置
+{
+  "browserslist": [
+    "last 2 version", // 所有浏览器兼容到最后两个版本根据CanIUse追踪的版本
+    "> 1%", // 全球超过1%人使用的浏览器
+	"not ie <= 8", // ie不能为IE8以下
+    "Android >= 4.0"
+  ]
+}
+// 或者在工程的根目录下存在.browerslistrc配置文件
+# 注释是这样写的，以#号开头
+last 1 version
+> 1%
+not ie <= 8
+Android >= 4.0
+
+// 直接在工程目录下运行npx browserslist 来查看你配置的筛选条件筛选出的浏览器版本范围
+```
+
+
 
 ### 样式表抽离成专门的单独文件并且设置版本号
 
@@ -561,9 +587,12 @@ npm install --save-dev mini-css-extract-plugin
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const devMode = process.env.NODE_ENV !== 'production'; // 判断当前环境是开发环境还是 部署环境，主要是 mode属性的设置值。
-
+/* 生产环境与开发环境
+生产环境,生产环境与开发环境完全不同，在生产环境中我们关注的是如何才能产生更小的代码块，压缩文件的体积，使得加载时间做到最短
+开发环境,在项目开发过程中，我们关注的是能否追溯到代码的错误来源，能够及时刷新页面让我们看到代码的实际效果
+*/
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: './src/index.js',
   output: {
     filename: 'main.js',
@@ -576,7 +605,16 @@ module.exports = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          'postcss-loader',
+          { // 添加前缀
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss', // 唯一标识
+              sourceMap: true,
+              plugins: loader => [
+                require('autoprefixer') // 可配置browserslist(package.json)
+              ]
+            }
+          },
           'sass-loader'
         ]
       }
@@ -775,9 +813,9 @@ module.exports = {
       chunkFilename: '[id][hash].css' // chunkname我的理解是未被列在entry中，却又需要被打包出来的文件命名配置。什么场景需要呢？我们项目就遇到过，在按需加载（异步）模块的时候，这样的文件是没有被列在entry中的，如使用CommonJS的方式异步加载模块：
     }),
     new HtmlWebpackPlugin({
-      title: 'AICODER 全栈线下实习', // 默认值：Webpack App
+      title: 'Webpack Demo', // 默认值：Webpack App
       filename: 'main.html', // 默认值： 'index.html'
-      template: path.resolve(__dirname, 'src/index.html'), // 将css,js注入到的文件
+      template: path.resolve(__dirname, 'index.html'), // 将css,js注入到的文件
       minify: {
         collapseWhitespace: true,
         removeComments: true, // 移除注释
@@ -815,7 +853,7 @@ webpack.config.js
 ```diff
   const path = require('path');
   ....
-+ const CleanWebpackPlugin = require('clean-webpack-plugin');
++ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
   module.exports = {
     entry: {
@@ -2102,9 +2140,3 @@ webpack还是有很多其他需要学习的内容。
 请参考官网，或者研究一下`vue-cli`的生成的webpack的相关配置，也很值得学习。
 
 另外其他脚手架生成的相关配置都可以研究一下比如：`create-react-app`、`yo`等
-
-## 感谢
-
-感谢大家对老马的支持，也是大家对老马的肯定，所以老马才坚持做良心视频，做良心教育。自从 腾讯课堂发布webpack教程后，收到很多学员的好的评价和支持，再次感谢大家。 
-
-腾讯课堂购买此课程地址： [https://ke.qq.com/course/321174?tuin=1eb4a0a4](https://ke.qq.com/course/321174?tuin=1eb4a0a4)
