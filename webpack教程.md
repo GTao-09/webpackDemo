@@ -1121,9 +1121,9 @@ project
   webpack-demo
   |- package.json
 - |- webpack.config.js
-+ |- webpack.common.js
-+ |- webpack.dev.js
-+ |- webpack.prod.js
++ |- webpack.common.js  // 存放公共配置
++ |- webpack.dev.js  // 开发环境
++ |- webpack.prod.js  // 生产环境
   |- /dist
   |- /src
     |- index.js
