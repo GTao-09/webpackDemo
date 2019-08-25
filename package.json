@@ -6,35 +6,69 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npx webpack",
-    "pro": "npx webpack --config webpack.product.config.js"
+    "pro": "npx webpack --config webpack.product.config.js",
+    "devT": "npx webpack --config webpack.dev.js",
+    "dist": "npx webpack --config webpack.prod.js",
+    "dev": "npx webpack-dev-server --config webpack.dev.js"
   },
   "keywords": [],
   "author": "GongTao",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "autoprefixer": "^9.6.1",
+    "babel-eslint": "^10.0.2",
+    "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.2.0",
+    "eslint": "^6.2.2",
+    "eslint-loader": "^3.0.0",
     "file-loader": "^4.2.0",
     "html-webpack-plugin": "^3.2.0",
     "image-webpack-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.8.0",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "postcss-loader": "^3.0.0",
+    "standard": "^14.0.2",
     "style-loader": "^1.0.0",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^2.1.0",
     "webpack": "^4.39.2",
-    "webpack-cli": "^3.3.7"
+    "webpack-cli": "^3.3.7",
+    "webpack-dev-server": "^3.8.0",
+    "webpack-merge": "^4.2.1"
   },
   "dependencies": {
+    "@babel/runtime": "^7.5.5",
     "lodash": "^4.17.15"
   },
   "browserslist": [
     "last 2 version",
     "> 1%",
     "not ie <= 8"
-  ]
+  ],
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "extends": [
+      "standard"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {
+      "indent": ["error", 2],
+      "quotes": ["error", "double"],
+      "semi": ["error", "always"],
+      "no-console": "error",
+      "arrow-parens": 0
+    }
+  }
 }

@@ -1135,7 +1135,7 @@ webpack.common.js
 
 ```diff
 + const path = require('path');
-+ const CleanWebpackPlugin = require('clean-webpack-plugin');
++ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 + const HtmlWebpackPlugin = require('html-webpack-plugin');
 +
 + module.exports = {
@@ -1143,7 +1143,7 @@ webpack.common.js
 +     app: './src/index.js'
 +   },
 +   plugins: [
-+     new CleanWebpackPlugin(['dist']),
++     new CleanWebpackPlugin(),
 +     new HtmlWebpackPlugin({
 +       title: 'Production'
 +     })
@@ -1194,7 +1194,7 @@ webpack.config.js
 ```diff
   const path = require('path');
   const HtmlWebpackPlugin = require('html-webpack-plugin');
-  const CleanWebpackPlugin = require('clean-webpack-plugin');
+  const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
   module.exports = {
     entry: {
@@ -1203,7 +1203,7 @@ webpack.config.js
     },
 +   devtool: 'inline-source-map',
     plugins: [
-      new CleanWebpackPlugin(['dist']),
+      new CleanWebpackPlugin(),
       new HtmlWebpackPlugin({
         title: 'Development'
       })
@@ -1214,8 +1214,6 @@ webpack.config.js
     }
   };
 ```
-
-![inline-source-map](../images/webpackinline.png)
 
 ### 监控文件变化，自动编译。使用观察模式
 
@@ -1367,6 +1365,14 @@ webpack.config.js
   };
 ```
 
+启动
+
+```sh
+npx webpack-dev-server --config webpack.dev.js
+```
+
+
+
 ### JS启用babel转码
 
 虽然现代的浏览器已经兼容了96%以上的ES6的语法了，但是为了兼容老式的浏览器（IE8、9）我们需要把最新的ES6的语法转成ES5的。那么`babel`的loader就出场了。
@@ -1374,7 +1380,7 @@ webpack.config.js
 安装
 
 ```sh
-npm i -D babel-loader babel-core babel-preset-env
+npm i -D babel-loader @babel/core @babel/preset-env
 ```
 
 用法
@@ -1401,7 +1407,7 @@ module: {
 
 ```json
 {
-  "presets": ["env"]
+  "presets": ["@babel/preset-env"] // presets字段设定转码规则
 }
 ```
 
@@ -1489,8 +1495,8 @@ babel 在每个文件都插入了辅助代码，使代码体积过大.babel 对�
 安装：
 
 ```sh
-npm install babel-plugin-transform-runtime --save-dev
-npm install babel-runtime --save
+npm install @babel/plugin-transform-runtime --save-dev
+npm install --save @babel/runtime
 ```
 
 配置：
@@ -1514,14 +1520,9 @@ rules: [
 
 ```json
 {
-  "presets": ["env"],
+  "presets": ["@babel/preset-env"],
   "plugins": [
-    ["transform-runtime", {
-      "helpers": true,
-      "polyfill": true,
-      "regenerator": true,
-      "moduleName": "babel-runtime"
-    }]
+      "@babel/plugin-transform-runtime"
   ]
 }
 ```
@@ -1554,7 +1555,7 @@ module.exports = {
         loader: "eslint-loader",
         options: {
           // eslint options (if necessary)
-          fix: true
+          fix: true // 自动修复
         }
       },
     ],
@@ -1583,28 +1584,63 @@ module.exports = {
   globals: {
     NODE_ENV: false
   },
-  rules: {
-    // allow async-await
-    'generator-star-spacing': 'off',
-    // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    // 添加，分号必须
-    semi: ['error', 'always'],
-    'no-unexpected-multiline': 'off',
-    'space-before-function-paren': ['error', 'never'],
-    // 'quotes': ["error", "double", { "avoidEscape": true }]
-    quotes: [
-      'error',
-      'single',
-      {
-        avoidEscape: true
-      }
-    ]
+  'rules': {
+    // 强制使用单引号
+    'quotes': ['error', 'single'],
+    // 要求或禁止使用分号而不是 ASI
+    'semi': ['error', 'never'],
+    // 禁止不必要的分号
+    'no-extra-semi': 'error',
+    // 强制使用一致的换行风格
+    'linebreak-style': ['error', 'unix'],
+    // 空格2个
+    'indent': ['error', 2, {'SwitchCase': 1}],
+    // 指定数组的元素之间要以空格隔开(,后面)， never参数：[ 之前和 ] 之后不能带空格，always参数：[ 之前和 ] 之后必须带空格
+    'array-bracket-spacing': [2, 'never'],
+    // 在块级作用域外访问块内定义的变量是否报错提示
+    'block-scoped-var': 0,
+    // if while function 后面的{必须与if在同一行，java风格。
+    'brace-style': [2, '1tbs', {'allowSingleLine': true}],
+    // 双峰驼命名格式
+    'camelcase': 2,
+    // 数组和对象键值对最后一个逗号， never参数：不能带末尾的逗号, always参数：必须带末尾的逗号， 
+    'comma-dangle': [2, 'never'],
+    // 控制逗号前后的空格
+    'comma-spacing': [2, {'before': false, 'after': true}],
+    // 控制逗号在行尾出现还是在行首出现
+    'comma-style': [2, 'last'],
+    // 圈复杂度
+    'complexity': [2, 9],
+    // 以方括号取对象属性时，[ 后面和 ] 前面是否需要空格, 可选参数 never, always
+    'computed-property-spacing': [2, 'never'],
+    // TODO 关闭 强制方法必须返回值，TypeScript强类型，不配置
+    // 'consistent-return': 0
   }
 };
 ```
 
+```json
+// 在package.json中配置
+"eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "standard"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  }
+```
+
+
+
 此时eslint的配置就结束了。
+
+.eslintignore 来配置非eslint校验文件
 
 ### 到此为止，一个完整的开发阶段的webpack的配置文件
 
@@ -2140,3 +2176,4 @@ webpack还是有很多其他需要学习的内容。
 请参考官网，或者研究一下`vue-cli`的生成的webpack的相关配置，也很值得学习。
 
 另外其他脚手架生成的相关配置都可以研究一下比如：`create-react-app`、`yo`等
+
