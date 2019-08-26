@@ -8,7 +8,7 @@
     "start": "npx webpack",
     "pro": "npx webpack --config webpack.product.config.js",
     "devT": "npx webpack --config webpack.dev.js",
-    "dist": "npx webpack --config webpack.prod.js",
+    "dist": "set NODE_ENV=production && npx webpack --config webpack.prod.js",
     "dev": "npx webpack-dev-server --config webpack.dev.js"
   },
   "keywords": [],
@@ -65,9 +65,7 @@
     },
     "rules": {
       "indent": ["error", 2],
-      "quotes": ["error", "double"],
-      "semi": ["error", "always"],
-      "no-console": "error",
+      "no-console": "off",
       "arrow-parens": 0
     }
   }

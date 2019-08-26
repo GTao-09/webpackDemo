@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 const devMode = (process.env.NODE_ENV !== 'production') // 判断当前环境是开发环境还是 部署环境，主要是 mode属性的设置值。
-/* 
+/*
   生产环境与开发环境
     生产环境,生产环境与开发环境完全不同，在生产环境中我们关注的是如何才能产生更小的代码块，压缩文件的体积，使得加载时间做到最短
     开发环境,在项目开发过程中，我们关注的是能否追溯到代码的错误来源，能够及时刷新页面让我们看到代码的实际效果
@@ -57,20 +57,20 @@ module.exports = {
                 quality: 65
               },
               optipng: {
-                enabled: false,
+                enabled: false
               },
               pngquant: {
                 quality: '65-90',
                 speed: 4
               },
               gifsicle: {
-                interlaced: false,
+                interlaced: false
               },
               webp: {
                 quality: 75
               }
             }
-          },
+          }
         ]
       },
       { // 字体处理
@@ -108,7 +108,7 @@ module.exports = {
         cache: true, // js未发生改变时不再次压缩
         parallel: true,
         sourceMap: true // set to true if you want JS source maps
-      }),
+      })
     ]
   }
 }
